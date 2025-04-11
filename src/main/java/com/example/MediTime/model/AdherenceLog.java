@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class AdheranceLog {
+public class AdherenceLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long adherenceId;

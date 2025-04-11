@@ -4,9 +4,8 @@
  */
 
 package com.example.MediTime.controller;
-
-import com.example.MediTime.model.AdheranceLog;
-import com.example.MediTime.service.AdheranceService;
+import com.example.MediTime.dto.AdherenceLogDTO;
+import com.example.MediTime.service.AdherenceLogService;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/adherence")
-public class AdheranceController {
+public class AdherenceLogController {
+
 
     @GetMapping
-    public List<AdheranceLog> getAllLogs() {
-        return AdheranceService.getAllLogs();
+    public List<AdherenceLogDTO> getAllLogs() {
+        return AdherenceLogService.getAllLogs().stream()
+            .map(AdherenceLogDTO::fromEntity)
+            .toList();
     }
 }
+
 

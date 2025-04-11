@@ -11,10 +11,10 @@ public class Report {
     private Long reportId;
 
     @ManyToOne
-    private User caregiver;  // caregiver writing the report
+    private User carer;  // carer writing the report
 
     @ManyToOne
-    private User patient;  // patient the report is about
+    private Client client;  // patient the report is about
 
     private String notes;
 
@@ -34,23 +34,27 @@ public class Report {
         this.reportId = reportId;
     }
 
+    public User getCarer() {
+        return carer;
+    }
+
+    public void setCarer(User carer) {
+        this.carer = carer;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
    
 
-    public User getCaregiver() {
-        return caregiver;
-    }
+   
 
-    public void setCaregiver(User caregiver) {
-        this.caregiver = caregiver;
-    }
-
-    public User getPatient() {
-        return patient;
-    }
-
-    public void setPatient(User patient) {
-        this.patient = patient;
-    }
+   
 
     public String getNotes() {
         return notes;
