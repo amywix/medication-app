@@ -1,11 +1,11 @@
-//Amy Wickham 12178502
 package com.example.MediTime.model;
-import jakarta.persistence.*;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 public class MedicationLog {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long logId;
@@ -14,7 +14,8 @@ public class MedicationLog {
     private ClientMedication clientMedication;
 
     @ManyToOne
-    private User user;
+    //@JoinColumn(name = "carer_id")  // optional: maps to DB column name
+    private User carer;  // this is the "carerId" from the diagram
 
     private LocalDateTime scheduledTime;
     private LocalDateTime actualTime;
@@ -46,12 +47,12 @@ public class MedicationLog {
         this.clientMedication = clientMedication;
     }
 
-    public User getUser() {
-        return user;
+    public User getCarer() {
+        return carer;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCarer(User carer) {
+        this.carer = carer;
     }
 
     public LocalDateTime getScheduledTime() {
@@ -85,5 +86,4 @@ public class MedicationLog {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-    
 }
