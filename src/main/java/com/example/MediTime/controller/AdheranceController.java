@@ -5,7 +5,10 @@
 
 package com.example.MediTime.controller;
 
-import org.springframework.ui.Model;
+import com.example.MediTime.model.AdheranceLog;
+import com.example.MediTime.service.AdheranceService;
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @author amywi
  */
 @RestController
+@RequestMapping("/api/adherence")
 public class AdheranceController {
 
-    @RequestMapping("/url1")
-    public String page(Model model) {
-        model.addAttribute("attribute", "value");
-        return "view.name";
+    @GetMapping
+    public List<AdheranceLog> getAllLogs() {
+        return AdheranceService.getAllLogs();
     }
-
 }
+
