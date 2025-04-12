@@ -1,25 +1,41 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/springframework/Controller.java to edit this template
- */
-
 package com.example.MediTime.controller;
 
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.MediTime.model.Client;
+import com.example.MediTime.service.ClientService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-/**
- *
- * @author amywi
- */
+import java.util.List;
+
 @RestController
+@RequestMapping("/api/clients")
 public class ClientController {
 
-    @RequestMapping("/url2")
-    public String page(Model model) {
-        model.addAttribute("attribute", "value");
-        return "view.name";
+    @Autowired
+    private ClientService clientService;
+
+    @GetMapping
+    public List<Client> getAllClients() {
+        return clientService.getAllClients();
     }
 
+    @GetMapping("/{clientId}")
+    public ResponseEntity<Client> getClientById(@PathVariable("clientId") Long clientId) {
+        return clientService.getClientById(clientId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public Client createClient(@RequestBody Client client) {
+        System.out.println("✅ Creating client: " + client.getName());
+        return clientService.saveClient(client);
+    }
+
+    @DeleteMapping("/{clientId}")
+    public ResponseEntity<Void> deleteClient(@PathVariable("clientId") Long clientId) {
+        clientService.deleteClient(clientId);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -1,25 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/springframework/Controller.java to edit this template
- */
+package com.example.MediTime.folder;
 
-package com.example.MediTime.controller;
+import com.example.MediTime.model.Medication;
+import com.example.MediTime.service.MedicationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
-/**
- *
- * @author amywi
- */
 @RestController
+@RequestMapping("/api/medications")
 public class MedicationController {
 
-    @RequestMapping("/url3")
-    public String page(Model model) {
-        model.addAttribute("attribute", "value");
-        return "view.name";
+    @Autowired
+    private MedicationService medicationService;
+
+    @GetMapping
+    public List<Medication> getAllMedications() {
+        return medicationService.getAllMedications();
     }
 
+    @PostMapping("/assign")
+    public ResponseEntity<?> assignMedication(@RequestBody Medication medication) {
+        medicationService.assignMedication(medication);
+        return ResponseEntity.ok("Medication assigned successfully.");
+    }
 }
