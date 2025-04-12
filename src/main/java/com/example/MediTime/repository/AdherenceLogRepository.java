@@ -6,5 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AdherenceLogRepository extends JpaRepository<AdherenceLog, Long> {
 
-    public List<AdherenceLog> findByClientMedicationId(Long clientMedicationId);
+    List<AdherenceLog> findByClientMedicationClientMedicationId(Long id);
+
+    
+
 }

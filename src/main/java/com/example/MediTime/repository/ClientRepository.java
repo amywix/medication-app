@@ -1,18 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
+
 package com.example.MediTime.repository;
 
 import com.example.MediTime.model.Client;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author amywi
  */
-public interface ClientRepository {
+
+
+public interface ClientRepository extends JpaRepository<Client, Long>{
 
     public List<Client> findAll();
 

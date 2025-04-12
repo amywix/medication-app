@@ -22,7 +22,7 @@ public class AdherenceLogService {
     }
 
     public List<AdherenceLog> getLogsByClientMedicationId(Long clientMedicationId) {
-        return adherenceLogRepository.findByClientMedicationId(clientMedicationId);
+        return adherenceLogRepository.findByClientMedicationClientMedicationId(clientMedicationId);
     }
 
     public void logAdherence(AdherenceLog log) {
