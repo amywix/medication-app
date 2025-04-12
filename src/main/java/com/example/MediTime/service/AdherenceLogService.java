@@ -1,20 +1,31 @@
 package com.example.MediTime.service;
 
-
 import com.example.MediTime.model.AdherenceLog;
-import java.util.List;
+import com.example.MediTime.repository.AdherenceLogRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
-/**
- *
- * @author amywi
- */
 @Service
 public class AdherenceLogService {
 
-    public static List<AdherenceLog> getAllLogs() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    @Autowired
+    private AdherenceLogRepository adherenceLogRepository;
+
+    public List<AdherenceLog> getAllLogs() {
+        return adherenceLogRepository.findAll();
     }
-    
+
+    public void saveLog(AdherenceLog log) {
+        adherenceLogRepository.save(log);
+    }
+
+    public List<AdherenceLog> getLogsByClientMedicationId(Long clientMedicationId) {
+        return adherenceLogRepository.findByClientMedicationId(clientMedicationId);
+    }
+
+    public void logAdherence(AdherenceLog log) {
+        adherenceLogRepository.save(log);
+    }
 }

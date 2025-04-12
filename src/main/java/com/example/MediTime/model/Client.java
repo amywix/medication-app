@@ -16,7 +16,7 @@ public class Client {
     private String contactInfo;
 
     @ManyToOne
-    private User manager;
+    private User carer;
 
     // Getters and Setters
 
@@ -52,12 +52,12 @@ public class Client {
         this.contactInfo = contactInfo;
     }
 
-    public User getManager() {
-        return manager;
+    public User getCarer() {
+        return carer;
     }
 
-    public void setManager(User manager) {
-        this.manager = manager;
+    public void setCarer(User manager) {
+        this.carer = manager;
     }
     
 }

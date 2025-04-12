@@ -1,25 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/springframework/Controller.java to edit this template
- */
-
 package com.example.MediTime.controller;
 
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.MediTime.model.Reminder;
+import com.example.MediTime.service.ReminderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-/**
- *
- * @author amywi
- */
+import java.util.List;
+
 @RestController
+@RequestMapping("/api/reminders")
 public class ReminderController {
 
-    @RequestMapping("/url4")
-    public String page(Model model) {
-        model.addAttribute("attribute", "value");
-        return "view.name";
+    @Autowired
+    private ReminderService reminderService;
+
+    @PostMapping
+    public ResponseEntity<Reminder> createReminder(@RequestBody Reminder reminder) {
+        return ResponseEntity.ok(reminderService.createReminder(reminder));
     }
 
+    @GetMapping("/client/{clientId}")
+    public ResponseEntity<List<Reminder>> getRemindersForClient(@PathVariable Long clientId) {
+        return ResponseEntity.ok(reminderService.getRemindersByClientId(clientId));
+    }
 }
