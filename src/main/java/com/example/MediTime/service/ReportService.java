@@ -1,4 +1,4 @@
-package com.example.MediTime.service;
+package com.example.meditime.service;
 
 import org.springframework.stereotype.Service;
 

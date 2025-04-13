@@ -1,6 +1,6 @@
-package com.example.MediTime.repository;
+package com.example.meditime.repository;
 
-import com.example.MediTime.model.Reminder;
+import com.example.meditime.model.Reminder;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,7 +1,7 @@
-package com.example.MediTime.service;
+package com.example.meditime.service;
 
-import com.example.MediTime.model.Medication;
-import com.example.MediTime.repository.MedicationRepository;
+import com.example.meditime.model.Medication;
+import com.example.meditime.repository.MedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

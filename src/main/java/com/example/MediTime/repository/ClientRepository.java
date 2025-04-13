@@ -1,25 +1,26 @@
+package com.example.meditime.repository;
 
-package com.example.MediTime.repository;
-
-import com.example.MediTime.model.Client;
+import com.example.meditime.model.Client;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-/**
- *
- * @author amywi
- */
+
+public interface ClientRepository extends JpaRepository<Client, Long> {
+    
 
 
-public interface ClientRepository extends JpaRepository<Client, Long>{
 
+    @Override
     public List<Client> findAll();
 
+    @Override
     public Optional<Client> findById(Long id);
 
+    @Override
     public Client save(Client client);
 
+    @Override
     public void deleteById(Long id);
     
 }

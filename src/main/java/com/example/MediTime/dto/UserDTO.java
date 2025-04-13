@@ -1,8 +1,8 @@
-package com.example.MediTime.dto;
+package com.example.meditime.dto;
 
-import com.example.MediTime.model.Role;
+import com.example.meditime.model.Role;
 import lombok.Data;
-import com.example.MediTime.model.User;
+import com.example.meditime.model.User;
 
 @Data
 public class UserDTO {

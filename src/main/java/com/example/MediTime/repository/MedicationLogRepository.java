@@ -1,6 +1,6 @@
-package com.example.MediTime.repository;
+package com.example.meditime.repository;
 
-import com.example.MediTime.model.MedicationLog;
+import com.example.meditime.model.MedicationLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MedicationLogRepository extends JpaRepository<MedicationLog, Long> {

@@ -1,7 +1,7 @@
-package com.example.MediTime.controller;
+package com.example.meditime.controller;
 
-import com.example.MediTime.model.Reminder;
-import com.example.MediTime.service.ReminderService;
+import com.example.meditime.model.Reminder;
+import com.example.meditime.service.ReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

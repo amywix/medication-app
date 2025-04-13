@@ -1,7 +1,7 @@
-package com.example.MediTime.controller;
+package com.example.meditime.controller;
 
-import com.example.MediTime.model.Client;
-import com.example.MediTime.service.ClientService;
+import com.example.meditime.model.Client;
+import com.example.meditime.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +28,10 @@ public class ClientController {
     }
 
     @PostMapping
-    public Client createClient(@RequestBody Client client) {
-        System.out.println("✅ Creating client: " + client.getName());
-        return clientService.saveClient(client);
+    public Client saveClient(@RequestBody Client client) {
+        System.out.println("Creating client: " + client.getName());
+       return clientService.saveClient(client); 
+
     }
 
     @DeleteMapping("/{clientId}")
