@@ -1,0 +1,4 @@
+Medication: Aspirin, Dosage: 100mg, Frequency: 1 Every Day, Start: 2025-04-01, End: 2025-04-30
+Medication: Paracetamol, Dosage: 500mg, Frequency: Every 4 hours, Start: 2025-04-01, End: 2025-04-30
+Medication: Aspirin, Dosage: 100mg, Frequency: 1 Every Day, Start: 2025-04-01, End: 2025-04-30
+Medication: Paracetamol, Dosage: 500mg, Frequency: Every 4 hours, Start: 2025-04-01, End: 2025-04-30

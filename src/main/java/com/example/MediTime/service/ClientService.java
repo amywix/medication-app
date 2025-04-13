@@ -1,54 +1,63 @@
 package com.example.meditime.service;
 
+import com.example.meditime.dto.ClientDTO;
 import com.example.meditime.model.Client;
 import com.example.meditime.repository.ClientRepository;
 import java.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
 
-    @Autowired
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
-   public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
-    public Client addClient(String name, LocalDate dob, String contact) {
-        Client client = new Client(name, dob, contact);
+    public Client addClientFromDTO(ClientDTO dto) {
+        Client client = new Client();
+        client.setName(dto.getName());
+        client.setDob(LocalDate.parse(dto.getDob()));
+        client.setContactInfo(dto.getContact());
         return clientRepository.save(client);
     }
 
-    
+    public List<ClientDTO> getAllClientDTOs() {
+        return clientRepository.findAll().stream()
+                .map(client -> new ClientDTO(
+                        client.getName(),
+                        client.getDob().toString(),
+                        client.getContactInfo()
+                ))
+                .collect(Collectors.toList());
+    }
 
-    
-   public Client saveClient(Client client) {
-    return clientRepository.save(client);
-}
-   
+    public Client updateClientFromDTO(Long id, ClientDTO dto) {
+        Optional<Client> optional = clientRepository.findById(id);
+        if (optional.isPresent()) {
+            Client client = optional.get();
+            client.setName(dto.getName());
+            client.setDob(LocalDate.parse(dto.getDob()));
+            client.setContactInfo(dto.getContact());
+            return clientRepository.save(client);
+        }
+        return null;
+    }
 
-
+    public boolean deleteClientById(Long id) {
+        if (clientRepository.existsById(id)) {
+            clientRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 
     public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
-
-    public Optional<Client> getClientById(Long id) {
-        return clientRepository.findById(id);
-    }
-
-    public void deleteClient(Long id) {
-        clientRepository.deleteById(id);
-    }
-
-    
-
-    
-
-    
 }
