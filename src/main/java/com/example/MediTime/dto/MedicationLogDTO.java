@@ -1,7 +1,7 @@
-package com.example.MediTime.dto;
+package com.example.meditime.dto;
 
 import lombok.Data;
-import com.example.MediTime.model.MedicationLog;
+import com.example.meditime.model.MedicationLog;
 
 @Data
 public class MedicationLogDTO {

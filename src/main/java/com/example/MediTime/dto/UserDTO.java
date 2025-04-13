@@ -1,12 +1,12 @@
-package com.example.MediTime.dto;
+package com.example.meditime.dto;
 
-import com.example.MediTime.model.Role;
+import com.example.meditime.model.Role;
 import lombok.Data;
-import com.example.MediTime.model.User;
+import com.example.meditime.model.User;
 
 @Data
 public class UserDTO {
-    private Long id;
+    private Long userId;
     private String name;
     private String email;
     private Role role;
@@ -14,7 +14,7 @@ public class UserDTO {
     public static UserDTO fromEntity(User user) {
         if (user == null) return null;
         UserDTO dto = new UserDTO();
-        dto.setId(user.getUserId());
+        dto.setUserId(user.getUserId());
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
         dto.setRole(user.getRole());
@@ -23,7 +23,7 @@ public class UserDTO {
 
     public User toEntity() {
         User user = new User();
-        user.setUserId(this.id);
+        user.setUserId(this.userId);
         user.setName(this.name);
         user.setEmail(this.email);
         user.setRole(this.role);

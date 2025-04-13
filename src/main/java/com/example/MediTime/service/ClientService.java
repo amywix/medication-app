@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/springframework/Service.java to edit this template
- */
-package com.example.MediTime.service;
+package com.example.meditime.service;
 
-import com.example.MediTime.model.Client;
-import com.example.MediTime.repository.ClientRepository;
+import com.example.meditime.model.Client;
+import com.example.meditime.repository.ClientRepository;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +15,25 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
+   public ClientService(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
+
+    public Client addClient(String name, LocalDate dob, String contact) {
+        Client client = new Client(name, dob, contact);
+        return clientRepository.save(client);
+    }
+
+    
+
+    
+   public Client saveClient(Client client) {
+    return clientRepository.save(client);
+}
+   
+
+
+
     public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
@@ -26,15 +42,13 @@ public class ClientService {
         return clientRepository.findById(id);
     }
 
-    public Client saveClient(Client client) {
-         System.out.println("Saving client: " + client.getName());
-        return clientRepository.save(client);
-        
-    }
-
     public void deleteClient(Long id) {
         clientRepository.deleteById(id);
     }
 
+    
 
+    
+
+    
 }

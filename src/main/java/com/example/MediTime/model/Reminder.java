@@ -1,5 +1,5 @@
 //Amy Wickham 12178502
-package com.example.MediTime.model;
+package com.example.meditime.model;
 import jakarta.persistence.*;
 
 import java.time.LocalTime;

@@ -1,4 +1,4 @@
-package com.example.MediTime.controller;
+package com.example.meditime.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

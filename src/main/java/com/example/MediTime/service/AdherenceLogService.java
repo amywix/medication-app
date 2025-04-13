@@ -1,7 +1,7 @@
-package com.example.MediTime.service;
+package com.example.meditime.service;
 
-import com.example.MediTime.model.AdherenceLog;
-import com.example.MediTime.repository.AdherenceLogRepository;
+import com.example.meditime.model.AdherenceLog;
+import com.example.meditime.repository.AdherenceLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class AdherenceLogService {
     }
 
     public List<AdherenceLog> getLogsByClientMedicationId(Long clientMedicationId) {
-        return adherenceLogRepository.findByClientMedicationId(clientMedicationId);
+        return adherenceLogRepository.findByClientMedicationClientMedicationId(clientMedicationId);
     }
 
     public void logAdherence(AdherenceLog log) {

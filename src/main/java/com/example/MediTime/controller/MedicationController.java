@@ -1,7 +1,7 @@
-package com.example.MediTime.folder;
+package com.example.meditime.controller;
 
-import com.example.MediTime.model.Medication;
-import com.example.MediTime.service.MedicationService;
+import com.example.meditime.model.Medication;
+import com.example.meditime.service.MedicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

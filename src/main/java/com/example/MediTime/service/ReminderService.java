@@ -1,7 +1,7 @@
-package com.example.MediTime.service;
+package com.example.meditime.service;
 
-import com.example.MediTime.model.Reminder;
-import com.example.MediTime.repository.ReminderRepository;
+import com.example.meditime.model.Reminder;
+import com.example.meditime.repository.ReminderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

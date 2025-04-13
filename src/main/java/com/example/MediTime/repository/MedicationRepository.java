@@ -1,6 +1,6 @@
-package com.example.MediTime.repository;
+package com.example.meditime.repository;
 
-import com.example.MediTime.model.Medication;
+import com.example.meditime.model.Medication;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

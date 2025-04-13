@@ -1,5 +1,5 @@
 //Amy Wickham 12178502
-package com.example.MediTime.model;
+package com.example.meditime.model;
 
 import jakarta.persistence.*;
 
@@ -17,6 +17,14 @@ public class Client {
 
     @ManyToOne
     private User carer;
+
+     public Client() {}
+     
+    public Client(String name, LocalDate dob, String contactInfo) {
+    this.name = name;
+    this.dob = dob;
+    this.contactInfo = contactInfo;
+}
 
     // Getters and Setters
 
