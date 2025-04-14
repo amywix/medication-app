@@ -1,3 +1,8 @@
+//Amy Wickham 121785021
+// Amy Wickham 12178502
+// File: UserDTO.java
+// Description: See MediTime documentation. This file is part of the medication management system.
+
 package com.example.meditime.dto;
 
 import com.example.meditime.model.Role;

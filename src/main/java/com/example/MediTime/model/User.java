@@ -14,7 +14,10 @@ public class User {
     private String password;
 
     @ManyToOne
-    private Role role;
+@JoinColumn(name = "role_id")
+private Role role;
+
+  
 
     // Getters and Setters
 

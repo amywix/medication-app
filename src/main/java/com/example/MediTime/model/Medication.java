@@ -9,7 +9,10 @@ public class Medication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long medicationId;
 
-    private String name;
+    @Column(nullable = false)
+private String name;
+
+ 
     private String description;
     private String sideEffects;
     private String interactionInfo;

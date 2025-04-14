@@ -1,5 +1,11 @@
+//Amy Wickham 121785021
+// Amy Wickham 12178502
+// File: ClientController.java
+// Description: See MediTime documentation. This file is part of the medication management system.
+
 package com.example.meditime.controller;
 
+import com.example.meditime.dto.ClientDTO;
 import com.example.meditime.model.Client;
 import com.example.meditime.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/clients")
@@ -16,27 +23,33 @@ public class ClientController {
     private ClientService clientService;
 
     @GetMapping
-    public List<Client> getAllClients() {
-        return clientService.getAllClients();
+    public List<ClientDTO> getAllClients() {
+        return clientService.getAllClientDTOs();
     }
 
     @GetMapping("/{clientId}")
-    public ResponseEntity<Client> getClientById(@PathVariable("clientId") Long clientId) {
-        return clientService.getClientById(clientId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ClientDTO> getClientById(@PathVariable("clientId") Long clientId) {
+        Optional<Client> clientOpt = clientService.getAllClients()
+                                                  .stream()
+                                                  .filter(c -> c.getClientId().equals(clientId))
+                                                  .findFirst();
+
+        return clientOpt.map(client -> ResponseEntity.ok(
+                        new ClientDTO(client.getName(),
+                                      client.getDob().toString(),
+                                      client.getContactInfo())))
+                        .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Client saveClient(@RequestBody Client client) {
-        System.out.println("Creating client: " + client.getName());
-       return clientService.saveClient(client); 
-
+    public ResponseEntity<Client> saveClient(@RequestBody ClientDTO dto) {
+        Client saved = clientService.addClientFromDTO(dto);
+        return ResponseEntity.ok(saved);
     }
 
     @DeleteMapping("/{clientId}")
     public ResponseEntity<Void> deleteClient(@PathVariable("clientId") Long clientId) {
-        clientService.deleteClient(clientId);
-        return ResponseEntity.noContent().build();
+        boolean deleted = clientService.deleteClientById(clientId);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }

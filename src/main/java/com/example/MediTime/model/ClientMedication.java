@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Entity
 public class ClientMedication {
-    @Id
+   @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clientMedicationId;
 
@@ -20,8 +20,6 @@ public class ClientMedication {
     private String frequency;
     private LocalDate startDate;
     private LocalDate endDate;
-
-    // Getters and Setters
 
     public Long getClientMedicationId() {
         return clientMedicationId;
