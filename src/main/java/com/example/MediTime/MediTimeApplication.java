@@ -1,32 +1,39 @@
+// Amy Wickham 12178502
+// File: MediTimeApplication.java
+
 
 package com.example.meditime;
 
 import com.example.meditime.dto.ClientDTO;
 import com.example.meditime.dto.ClientMedicationDTO;
 import com.example.meditime.model.Client;
-import com.example.meditime.service.ClientMedicationService;
-import com.example.meditime.service.ClientService;
+import com.example.meditime.service.*;
+import java.time.LocalDate;
+import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 @SpringBootApplication
 public class MediTimeApplication {
 
     public static void main(String[] args) {
+        // Initialize Spring Boot application 
         ApplicationContext context = SpringApplication.run(MediTimeApplication.class, args);
+
+        // Service instances 
         ClientService clientService = context.getBean(ClientService.class);
-        ClientMedicationService medicationService = context.getBean(ClientMedicationService.class);
+        ClientMedicationService clientMedicationService = context.getBean(ClientMedicationService.class);
+        UserService userService = context.getBean(UserService.class);
+        MedicationInteractionService medicationInteractionService = context.getBean(MedicationInteractionService.class);
+        MedicationService medicationService = context.getBean(MedicationService.class);
+        MedicationLogService medicationLogService = context.getBean(MedicationLogService.class);
 
         Scanner scanner = new Scanner(System.in);
 
+        // Main menu
         while (true) {
             System.out.println("\n--- MediTime Console ---");
             System.out.println("Select Role:");
@@ -35,12 +42,20 @@ public class MediTimeApplication {
             System.out.println("3. Exit");
             System.out.print("Enter option: ");
 
-            int roleChoice = scanner.nextInt();
-            scanner.nextLine();
+            int roleChoice;
+            try {
+                roleChoice = scanner.nextInt();  // Read user input
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
+                continue;
+            }
+            scanner.nextLine();  
 
+            //  select role
             switch (roleChoice) {
-                case 1 -> runManagerConsole(scanner, clientService, medicationService);
-                case 2 -> runCarerConsole(scanner, clientService, medicationService);
+                case 1 -> runManagerConsole(scanner, clientService, clientMedicationService, userService, medicationInteractionService, medicationLogService);
+                case 2 -> runCarerConsole(scanner, clientService, clientMedicationService, medicationLogService);
                 case 3 -> {
                     System.out.println("Exiting...");
                     return;
@@ -50,168 +65,145 @@ public class MediTimeApplication {
         }
     }
 
-    private static void runManagerConsole(Scanner scanner, ClientService clientService, ClientMedicationService medicationService) {
+    // Manager functions
+    private static void runManagerConsole(Scanner scanner,
+                                          ClientService clientService,
+                                          ClientMedicationService clientMedicationService,
+                                          UserService userService,
+                                          MedicationInteractionService medicationInteractionService,
+                                          MedicationLogService medicationLogService) {
+
         while (true) {
             System.out.println("\n--- Manager Menu ---");
             System.out.println("1. Add Client");
             System.out.println("2. List Clients");
             System.out.println("3. Update Client");
             System.out.println("4. Delete Client");
-            System.out.println("5. Generate Client Medication Report");
-            System.out.println("6. Back to Role Menu");
+            System.out.println("5. Add Carer");
+            System.out.println("6. View Carers");
+            System.out.println("7. Delete Carer");
+            System.out.println("8. Assign Medication Schedule to Client");
+            System.out.println("9. Generate Adherence Report");
+            System.out.println("10. Assign Carer to Client");
+            System.out.println("11. Back to Role Menu");
             System.out.print("Enter option: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice;
+            try {
+                choice = scanner.nextInt();
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
+                continue;
+            }
+            scanner.nextLine();  
 
             switch (choice) {
                 case 1 -> {
                     System.out.print("Enter client's name: ");
                     String name = scanner.nextLine();
-
                     System.out.print("Enter DOB (yyyy-mm-dd): ");
                     String dob = scanner.nextLine();
-
                     System.out.print("Enter contact info: ");
                     String contact = scanner.nextLine();
-
                     ClientDTO dto = new ClientDTO(name, dob, contact);
                     clientService.addClientFromDTO(dto);
                     System.out.println("Client added successfully!");
                 }
-             case 2 -> {
-    System.out.println("\n--- Carer Console ---");
-
-    // Step 1: Show all clients
-    List<Client> clients = clientService.getAllClients();
-    if (clients.isEmpty()) {
-        System.out.println("No clients found.");
-        break;
-    }
-
-    System.out.println("Select a client:");
-    for (Client client : clients) {
-        System.out.printf("ID: %d | Name: %s | DOB: %s%n",
-                client.getClientId(), client.getName(), client.getDob());
-    }
-
-    System.out.print("Enter client ID: ");
-    Long selectedClientId = scanner.nextLong();
-    scanner.nextLine();
-
-    Optional<Client> selectedClientOpt = clients.stream()
-            .filter(c -> c.getClientId().equals(selectedClientId))
-            .findFirst();
-
-    if (selectedClientOpt.isEmpty()) {
-        System.out.println("Invalid client ID.");
-        break;
-    }
-
-    Client selectedClient = selectedClientOpt.get();
-    System.out.printf("Selected client: %s%n", selectedClient.getName());
-
-    // Step 2: Show carer menu for selected client
-    boolean back = false;
-    while (!back) {
-        System.out.println("\n--- Client Menu ---");
-        System.out.println("1. View Medication Schedule");
-        System.out.println("2. Mark Medication as Given/Skipped");
-        System.out.println("3. Upload Incident Note");
-        System.out.println("4. Back to Role Menu");
-        System.out.print("Enter option: ");
-
-        int clientMenuChoice = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (clientMenuChoice) {
-            case 1 -> {
-                List<ClientMedicationDTO> meds = medicationService.getClientMedicationDTOs(selectedClient.getClientId());
-if (meds.isEmpty()) {
-    System.out.println("No medication scheduled for this client.");
-} else {
-    System.out.println("Medication Schedule:");
-    for (ClientMedicationDTO med : meds) {
-        System.out.printf("- %s | Dosage: %s | Frequency: %s | Start: %s | End: %s%n",
-                med.getMedicationName(), med.getDosage(), med.getFrequency(), med.getStartDate(), med.getEndDate());
-    }
-}
-
-            }
-            case 2 -> {
-                System.out.println("mark medication as Given/Skipped.");
-            }
-            case 3 -> {
-                System.out.println("Upload incident note.");
-            }
-            case 4 -> back = true;
-            default -> System.out.println("Invalid option.");
-        }
-    }
-}
-
+                case 2 -> clientService.getAllClients().forEach(c ->
+                        System.out.println("ID: " + c.getClientId() + " | Name: " + c.getName()));
                 case 3 -> {
                     System.out.print("Enter ID of client to update: ");
-                    Long updateId = scanner.nextLong();
-                    scanner.nextLine();
-
+                    Long id = scanner.nextLong(); scanner.nextLine();
                     System.out.print("Enter new name: ");
-                    String newName = scanner.nextLine();
-
+                    String name = scanner.nextLine();
                     System.out.print("Enter new DOB (yyyy-mm-dd): ");
-                    String newDob = scanner.nextLine();
-
+                    String dob = scanner.nextLine();
                     System.out.print("Enter new contact: ");
-                    String newContact = scanner.nextLine();
-
-                    ClientDTO dto = new ClientDTO(newName, newDob, newContact);
-                    Client updated = clientService.updateClientFromDTO(updateId, dto);
-                    if (updated != null) {
-                        System.out.println("Client updated.");
-                    } else {
-                        System.out.println("Client not found.");
-                    }
+                    String contact = scanner.nextLine();
+                    Client updated = clientService.updateClientFromDTO(id, new ClientDTO(name, dob, contact));
+                    System.out.println(updated != null ? "Client updated." : "Client not found.");
                 }
                 case 4 -> {
                     System.out.print("Enter ID of client to delete: ");
-                    Long deleteId = scanner.nextLong();
-                    scanner.nextLine();
-
-                    boolean deleted = clientService.deleteClientById(deleteId);
-                    if (deleted) {
-                        System.out.println("✅ Client deleted.");
-                    } else {
-                        System.out.println("❌ Client not found.");
-                    }
+                    Long id = scanner.nextLong(); scanner.nextLine();
+                    boolean result = clientService.deleteClientById(id);
+                    System.out.println(result ? "Client deleted." : "Client not found.");
                 }
                 case 5 -> {
-                    System.out.print("Enter client ID for report: ");
-                    Long clientId = scanner.nextLong();
-                    scanner.nextLine();
+                    System.out.print("Enter name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter email: ");
+                    String email = scanner.nextLine();
+                    System.out.print("Enter password: ");
+                    String password = scanner.nextLine();
+                    userService.addUser(name, email, password, "Carer");
+                    System.out.println("Carer added.");
+                }
+                case 6 -> userService.getUsersByRole("Carer")
+                        .forEach(c -> System.out.println("ID: " + c.getUserId() + " | Name: " + c.getName()));
+                case 7 -> {
+                    System.out.print("Enter carer ID to delete: ");
+                    Long id = scanner.nextLong(); scanner.nextLine();
+                    boolean result = userService.deleteUserById(id);
+                    System.out.println(result ? "Carer deleted." : "Carer not found.");
+                }
+                case 8 -> {
+                    System.out.print("Client ID: ");
+                    Long clientId = scanner.nextLong(); scanner.nextLine();
+                    System.out.print("Medication ID: ");
+                    Long medicationId = scanner.nextLong(); scanner.nextLine();
 
-                    List<ClientMedicationDTO> meds = medicationService.getClientMedicationDTOs(clientId);
-                    try (FileWriter writer = new FileWriter("client_medication_report_" + clientId + ".txt")) {
-                        for (ClientMedicationDTO med : meds) {
-                            writer.write("Medication: " + med.getMedicationName() +
-                                         ", Dosage: " + med.getDosage() +
-                                         ", Frequency: " + med.getFrequency() +
-                                         ", Start: " + med.getStartDate() +
-                                         ", End: " + med.getEndDate() + "\n");
-                        }
-                        System.out.println("Report generated successfully.");
-                    } catch (IOException e) {
-                        System.out.println("Error writing report: " + e.getMessage());
+                    boolean interaction = medicationInteractionService.checkInteractions(clientId, medicationId);
+                    if (interaction) {
+                        System.out.println("WARNING: Drug interaction detected!");
                     }
+
+                    System.out.print("Dosage: ");
+                    String dosage = scanner.nextLine();
+                    System.out.print("Frequency: ");
+                    String frequency = scanner.nextLine();
+                    System.out.print("Start Date (yyyy-mm-dd): ");
+                    String start = scanner.nextLine();
+                    System.out.print("End Date (yyyy-mm-dd): ");
+                    String end = scanner.nextLine();
+
+                    ClientMedicationDTO dto = new ClientMedicationDTO();
+                    dto.setClientId(clientId);
+                    dto.setMedicationId(medicationId);
+                    dto.setDosage(dosage);
+                    dto.setFrequency(frequency);
+                    dto.setStartDate(LocalDate.parse(start));
+                    dto.setEndDate(LocalDate.parse(end));
+                    clientMedicationService.assignMedication(dto);
+                    System.out.println("Medication assigned.");
                 }
-                case 6 -> {
-                    return;
+                case 9 -> {
+                    System.out.print("Client ID for adherence report: ");
+                    Long id = scanner.nextLong(); scanner.nextLine();
+                    double rate = clientMedicationService.calculateAdherenceRate(id);
+                    System.out.printf("Adherence Rate: %.2f%%\n", rate);
                 }
-                default -> System.out.println("Invalid choice. Try again.");
+                case 10 -> {
+                    System.out.print("Enter Client ID: ");
+                    Long clientId = scanner.nextLong(); scanner.nextLine();
+                    System.out.print("Enter Carer ID: ");
+                    Long carerId = scanner.nextLong(); scanner.nextLine();
+                    boolean result = clientService.assignCarerToClient(clientId, carerId);
+                    System.out.println(result ? "Carer assigned to client." : "Failed to assign carer.");
+                }
+                case 11 -> { return; }
+                default -> System.out.println("Invalid option.");
             }
         }
     }
 
-    private static void runCarerConsole(Scanner scanner, ClientService clientService, ClientMedicationService medicationService) {
+   //care functions
+    private static void runCarerConsole(Scanner scanner,
+                                        ClientService clientService,
+                                        ClientMedicationService medicationService,
+                                        MedicationLogService logService) {
+
         while (true) {
             System.out.println("\n--- Carer Menu ---");
             System.out.println("1. View Client Medication Schedule");
@@ -220,54 +212,62 @@ if (meds.isEmpty()) {
             System.out.println("4. Back to Role Menu");
             System.out.print("Enter option: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice;
+            try {
+                choice = scanner.nextInt();
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
+                continue;
+            }
+            scanner.nextLine();  
 
             switch (choice) {
+              //view client medication scheudle
                 case 1 -> {
                     System.out.print("Enter client ID: ");
-                    Long clientId = scanner.nextLong();
-                    scanner.nextLine();
+                    Long clientId = scanner.nextLong(); scanner.nextLine();
 
                     List<ClientMedicationDTO> meds = medicationService.getClientMedicationDTOs(clientId);
                     if (meds.isEmpty()) {
                         System.out.println("No medications found for this client.");
                     } else {
-                        for (ClientMedicationDTO med : meds) {
-                            System.out.println("Medication: " + med.getMedicationName() +
-                                    ", Dosage: " + med.getDosage() +
-                                    ", Frequency: " + med.getFrequency() +
-                                    ", Start: " + med.getStartDate() +
-                                    ", End: " + med.getEndDate());
-                        }
+                        meds.forEach(med ->
+                                System.out.printf("Medication: %s | Dosage: %s | Frequency: %s | Start: %s | End: %s%n",
+                                        med.getMedicationName(), med.getDosage(), med.getFrequency(),
+                                        med.getStartDate(), med.getEndDate()));
                     }
                 }
+                // mark meidcation as given or skipped 
                 case 2 -> {
+                    System.out.print("Enter client ID: ");
+                    Long clientId = scanner.nextLong(); scanner.nextLine();
                     System.out.print("Enter medication name to mark: ");
                     String medName = scanner.nextLine();
                     System.out.print("Was it Given or Skipped? (G/S): ");
                     String status = scanner.nextLine().equalsIgnoreCase("G") ? "Given" : "Skipped";
-                    System.out.println("Status saved: " + medName + " marked as " + status);
-                    // In real implementation, save to medication log in DB
+                    logService.logMedicationStatus(clientId, medName, status);
+                    System.out.println("Status saved.");
                 }
                 case 3 -> {
                     System.out.print("Enter client ID: ");
-                    Long clientId = scanner.nextLong();
-                    scanner.nextLine();
+                    Long clientId = scanner.nextLong(); scanner.nextLine();
                     System.out.print("Enter incident description: ");
                     String incident = scanner.nextLine();
-                    try (FileWriter writer = new FileWriter("incident_log_client_" + clientId + ".txt", true)) {
+
+                    try (var writer = new java.io.FileWriter("incident_log_client_" + clientId + ".txt", true)) {
                         writer.write(LocalDate.now() + " - " + incident + "\n");
                         System.out.println("Incident noted.");
-                    } catch (IOException e) {
-                        System.out.println("Error writing incident note: " + e.getMessage());
+                    } catch (Exception e) {
+                        System.out.println("Error writing incident: " + e.getMessage());
                     }
                 }
                 case 4 -> {
                     return;
                 }
-                default -> System.out.println("Invalid choice. Try again.");
+                default -> System.out.println("Invalid option. Try again.");
             }
         }
     }
+                
 }

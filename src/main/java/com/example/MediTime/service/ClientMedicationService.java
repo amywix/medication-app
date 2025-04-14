@@ -1,4 +1,4 @@
-
+//Amy Wickham 121785021
 package com.example.meditime.service;
 
 import com.example.meditime.dto.ClientMedicationDTO;
@@ -6,156 +6,80 @@ import com.example.meditime.model.Client;
 import com.example.meditime.model.ClientMedication;
 import com.example.meditime.model.Medication;
 import com.example.meditime.model.MedicationLog;
-import com.example.meditime.model.User;
 import com.example.meditime.repository.ClientMedicationRepository;
 import com.example.meditime.repository.ClientRepository;
 import com.example.meditime.repository.MedicationLogRepository;
 import com.example.meditime.repository.MedicationRepository;
-import com.example.meditime.repository.UserRepository;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- *
- * @author amywi
- */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ClientMedicationService {
 
-    private final ClientMedicationRepository medicationRepository;
-    private final ClientRepository clientRepository;
-    private final MedicationRepository medicationRepositoryRef;
-     private final UserRepository userRepository;
-     private final MedicationLogRepository medicationLogRepository;
+    @Autowired
+    private ClientRepository clientRepository;
 
-   public ClientMedicationService(
-    ClientMedicationRepository medicationRepository,
-    ClientRepository clientRepository,
-    MedicationRepository medicationRepositoryRef,
-    UserRepository userRepository,
-    MedicationLogRepository medicationLogRepository
-) {
-    this.medicationRepository = medicationRepository;
-    this.clientRepository = clientRepository;
-    this.medicationRepositoryRef = medicationRepositoryRef;
-    this.userRepository = userRepository;
-    this.medicationLogRepository = medicationLogRepository;
-}
+    @Autowired
+    private MedicationRepository medicationRepository;
+    @Autowired
+    private MedicationLogRepository medicationLogRepository;
+    @Autowired
+    private ClientMedicationRepository clientMedicationRepository;
 
+    public void assignMedication(ClientMedicationDTO dto) {
+        Optional<Client> clientOpt = clientRepository.findById(dto.getClientId());
+        Optional<Medication> medicationOpt = medicationRepository.findById(dto.getMedicationId());
 
-    public ClientMedication createSchedule(Long clientId, Long medicationId, String dosage, String frequency, LocalDate startDate, LocalDate endDate) {
-        Optional<Client> client = clientRepository.findById(clientId);
-        Optional<Medication> medication = medicationRepositoryRef.findById(medicationId);
-
-        if (client.isPresent() && medication.isPresent()) {
+        if (clientOpt.isPresent() && medicationOpt.isPresent()) {
             ClientMedication cm = new ClientMedication();
-            cm.setClient(client.get());
-            cm.setMedication(medication.get());
-            cm.setDosage(dosage);
-            cm.setFrequency(frequency);
-            cm.setStartDate(startDate);
-            cm.setEndDate(endDate);
-            return medicationRepository.save(cm);
+            cm.setClient(clientOpt.get());
+            cm.setMedication(medicationOpt.get());
+            cm.setDosage(dto.getDosage());
+            cm.setFrequency(dto.getFrequency());
+            cm.setStartDate(dto.getStartDate());
+            cm.setEndDate(dto.getEndDate());
+
+            clientMedicationRepository.save(cm);
+            System.out.println("Medication schedule assigned successfully.");
+        } else {
+            System.out.println("Client or Medication not found.");
         }
-        return null;
-    }
-
-    public ClientMedication updateSchedule(Long id, String dosage, String frequency, LocalDate startDate, LocalDate endDate) {
-        Optional<ClientMedication> optional = medicationRepository.findById(id);
-        if (optional.isPresent()) {
-            ClientMedication cm = optional.get();
-            cm.setDosage(dosage);
-            cm.setFrequency(frequency);
-            cm.setStartDate(startDate);
-            cm.setEndDate(endDate);
-            return medicationRepository.save(cm);
-        }
-        return null;
-    }
-
-    public boolean deleteSchedule(Long id) {
-        if (medicationRepository.existsById(id)) {
-            medicationRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-    public List<ClientMedication> getSchedulesForClient(Long clientId) {
-        return medicationRepository.findByClient_ClientId(clientId);
-    }
-    // --- Drug Interaction Check ---
-    public List<String> checkDrugInteractions(Long clientId, Long newMedicationId) {
-        Optional<Medication> newMedicationOpt = medicationRepositoryRef.findById(newMedicationId);
-        if (newMedicationOpt.isEmpty()) return Collections.emptyList();
-
-        Medication newMedication = newMedicationOpt.get();
-        Set<String> interactions = new HashSet<>(Arrays.asList(newMedication.getInteractionInfo().split(",")));
-
-        List<ClientMedication> currentMeds = medicationRepository.findByClient_ClientId(clientId);
-        List<String> conflicts = new ArrayList<>();
-
-        for (ClientMedication cm : currentMeds) {
-            String currentName = cm.getMedication().getName();
-            if (interactions.contains(currentName)) {
-                conflicts.add(currentName);
-            }
-        }
-        return conflicts;
-    }
-
-    // --- Side Effects Warning ---
-    public List<String> getSignificantSideEffects(Long medicationId) {
-        Optional<Medication> medicationOpt = medicationRepositoryRef.findById(medicationId);
-        if (medicationOpt.isEmpty()) return Collections.emptyList();
-
-        Medication medication = medicationOpt.get();
-        return Arrays.asList(medication.getSideEffects().split(","));
     }
 
     public List<ClientMedicationDTO> getClientMedicationDTOs(Long clientId) {
-    List<ClientMedication> entities = medicationRepository.findByClient_ClientId(clientId);
-    return entities.stream().map(cm -> new ClientMedicationDTO(
-            cm.getMedication().getName(),
-            cm.getDosage(),
-            cm.getFrequency(),
-            cm.getStartDate().toString(),
-            cm.getEndDate().toString()
-    )).toList();
+        List<ClientMedication> meds = clientMedicationRepository.findByClient_ClientId(clientId);
+        List<ClientMedicationDTO> dtos = new ArrayList<>();
+
+        for (ClientMedication cm : meds) {
+            ClientMedicationDTO dto = new ClientMedicationDTO();
+            dto.setMedicationName(cm.getMedication().getName());
+            dto.setDosage(cm.getDosage());
+            dto.setFrequency(cm.getFrequency());
+            dto.setStartDate(cm.getStartDate());
+            dto.setEndDate(cm.getEndDate());
+            dtos.add(dto);
+        }
+
+        return dtos;
+    }
+     public double calculateAdherenceRate(Long clientId) {
+    // Get all medication logs for this client's medications
+    List<MedicationLog> logs = medicationLogRepository.findByClientMedication_Client_ClientId(clientId);
+
+    if (logs.isEmpty()) {
+        return 0.0;
+    }
+
+    long totalDoses = logs.size();
+    long givenDoses = logs.stream()
+            .filter(log -> log.getStatus() == MedicationLog.Status.Given)
+            .count();
+
+    return ((double) givenDoses / totalDoses) * 100;
 }
-public void logMedicationAction(
-        Long clientMedicationId,
-        Long carerId,
-        MedicationLog.Status status,
-        LocalDateTime scheduledTime,
-        LocalDateTime actualTime,
-        String notes
-) {
-    MedicationLog log = new MedicationLog();
-
-    ClientMedication clientMedication = medicationRepository.findById(clientMedicationId)
-            .orElseThrow(() -> new RuntimeException("ClientMedication not found"));
-
-    User carer = userRepository.findById(carerId)
-            .orElseThrow(() -> new RuntimeException("Carer not found"));
-
-    log.setClientMedication(clientMedication);
-    log.setCarer(carer);
-    log.setStatus(status);
-    log.setScheduledTime(scheduledTime);
-    log.setActualTime(actualTime);
-    log.setNotes(notes);
-
-    medicationLogRepository.save(log);
-}
-
 
 }

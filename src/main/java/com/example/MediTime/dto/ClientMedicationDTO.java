@@ -1,24 +1,38 @@
+//Amy Wickham 121785021
+// Amy Wickham 12178502
+// File: ClientMedicationDTO.java
+// Description: See MediTime documentation. This file is part of the medication management system.
+
 package com.example.meditime.dto;
 
+import java.time.LocalDate;
+
 public class ClientMedicationDTO {
+    private Long clientId;
+    private Long medicationId;
     private String medicationName;
     private String dosage;
     private String frequency;
-    private String startDate;
-    private String endDate;
-
-    // Constructors
-    public ClientMedicationDTO() {}
-
-    public ClientMedicationDTO(String medicationName, String dosage, String frequency, String startDate, String endDate) {
-        this.medicationName = medicationName;
-        this.dosage = dosage;
-        this.frequency = frequency;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     // Getters and Setters
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
+    }
+
+    public Long getMedicationId() {
+        return medicationId;
+    }
+
+    public void setMedicationId(Long medicationId) {
+        this.medicationId = medicationId;
+    }
+
     public String getMedicationName() {
         return medicationName;
     }
@@ -43,19 +57,19 @@ public class ClientMedicationDTO {
         this.frequency = frequency;
     }
 
-    public String getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 }

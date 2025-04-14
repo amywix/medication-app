@@ -1,3 +1,7 @@
+// Amy Wickham 12178502
+// File: ReportService.java
+
+
 package com.example.meditime.service;
 
 import org.springframework.stereotype.Service;
@@ -6,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ReportService {
 
     public String generateReportForManager(Long managerId) {
-        // Placeholder report logic
-        return "📊 Report generated for manager ID: " + managerId;
+       
+        return "Report generated for manager ID: " + managerId;
     }
 }

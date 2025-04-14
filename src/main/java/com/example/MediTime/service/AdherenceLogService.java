@@ -1,3 +1,4 @@
+//Amy Wickham 121785021
 package com.example.meditime.service;
 
 import com.example.meditime.model.AdherenceLog;
@@ -12,7 +13,6 @@ public class AdherenceLogService {
 
     @Autowired
     private AdherenceLogRepository adherenceLogRepository;
-
     public List<AdherenceLog> getAllLogs() {
         return adherenceLogRepository.findAll();
     }
@@ -28,4 +28,5 @@ public class AdherenceLogService {
     public void logAdherence(AdherenceLog log) {
         adherenceLogRepository.save(log);
     }
+    
 }

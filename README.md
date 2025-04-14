@@ -1,90 +1,91 @@
-# 🩺 MediTime – Medication Management System
-
-A Spring Boot + Android powered backend for managing medication, adherence tracking, reminders, and AI-powered safety alerts for clients and carers in a disability support setting.
-
----
 Current App Functionality Summary
-The MediTimeApplication is a Spring Boot console application that supports role-based access:
+The MediTimeApplication is a Spring Boot application that supports role-based access. I have added a console for testing purposes prior to integrating with the Android Front End:
 Role Selection
-When the app launches, users are prompted to select:
+
+When the console app launches, users are prompted to select:
 •	1. Manager
 •	2. Carer
 •	3. Exit
+
 Manager Role
-Currently supports full client management:
-•	Add Client: Name, DOB, and contact info
-•	List Clients: Display all clients in the database
-•	Update Client: Modify client details by ID
-•	Delete Client: Remove client from the database
-•	Back: Return to main role selection
+	Add Client
+	List Clients
+	Update Client
+	Delete Client
+	Add Carer
+	View Carers
+	Delete Carer
+	Assign Medication Schedule to Client
+	Generate Adherence Report
+	Assign Carer to Client
+
 Carer Role
-Placeholder for now – but will include:
-•	View assigned clients
-•	View medication schedule
-•	Mark medication as Given/Skipped
-•	Upload incident notes
-•	Get AI-generated reminders
+	View Client Medication Schedule
+	Mark Medication as Given or Skipped
+	Upload Incident Note
 
-## 📁 Project Structure
+Working databse functions. 
 
-MediTime/
-├── src/
-│   └── main/
-│       ├── java/
-│       │   └── com/
-│       │       └── example/
-│       │           └── MediTime/
-│       │               ├── controller/
-│       │               │   ├── AdherenceController.java
-│       │               │   ├── ClientController.java
-│       │               │   ├── HomeController.java
-│       │               │   ├── MedicationController.java
-│       │               │   ├── ReminderController.java
-│       │               │   ├── ReportController.java
-│       │               │   ├── UserController.java
-│       │               ├── dto/
-│       │               │   ├── ClientDTO.java
-│       │               │   ├── UserDTO.java
-│       │               ├── model/
-│       │               │   ├── AdherenceLog.java
-│       │               │   ├── Client.java
-│       │               │   ├── ClientMedication.java
-│       │               │   ├── Medication.java
-│       │               │   ├── MedicationInteraction.java
-│       │               │   ├── MedicationLog.java
-│       │               │   ├── Reminder.java
-│       │               │   ├── Report.java
-│       │               │   ├── Role.java
-│       │               │   ├── User.java
-│       │               ├── repository/
-│       │               │   ├── AdherenceLogRepository.java
-│       │               │   ├── ClientMedicationRepository.java
-│       │               │   ├── ClientRepository.java
-│       │               │   ├── MedicationInteractionRepository.java
-│       │               │   ├── MedicationLogRepository.java
-│       │               │   ├── MedicationRepository.java
-│       │               │   ├── ReminderRepository.java
-│       │               │   ├── RoleRepository.java
-│       │               │   ├── UserRepository.java
-│       │               │   ├── ReportRepository.java
-│       │               ├── service/
-│       │               │   ├── AdherenceLogService.java
-								ClientMedicationService.java
-│       │               │   ├── ClientService.java
-│       │               │   ├── MedicationInteractionService.java
-│       │               │   ├── MedicationLogService.java
-│       │               │   ├── MedicationService.java
-│       │               │   ├── ReminderService.java
-│       │               │   ├── ReportService.java
-│       │               │   ├── UserService.java
-│       │               └── MediTimeApplication.java
-│       └── resources/
-│           ├── static/
-│           │   └── index.html
-│           ├── templates/
-│           │   └── index.html 
-│           ├── application.properties
-│           └── data.sql 
-├── pom.xml
-└── README.md
 
+src
+└── main
+    └── java
+        └── com
+            └── example
+                └── meditime
+                    ├── controller
+                    │   ├── HomeController.java
+                    │   ├── ClientController.java
+                    │   ├── ClientMedicationController.java
+                    │   ├── AdherenceLogController.java
+                    │   ├── MedicationController.java
+                    │   ├── UserController.java
+                    │   ├── ReportController.java
+                    │   └── ReminderController.java
+                    │
+                    ├── dto
+                    │   ├── ClientDTO.java
+                    │   ├── ClientMedicationDTO.java
+                    │   ├── AdherenceLogDTO.java
+                    │   ├── UserDTO.java
+                    │   ├── MedicationLogDTO.java
+                    │   ├── MedicationInteractionDTO.java
+                    │   └── ReportDTO.java
+                    │
+                    ├── model
+                    │   ├── Client.java
+                    │   ├── User.java
+                    │   ├── Role.java
+                    │   ├── Medication.java
+                    │   ├── ClientMedication.java
+                    │   ├── MedicationSchedule.java
+                    │   ├── MedicationLog.java
+                    │   ├── MedicationInteraction.java
+                    │   ├── AdherenceLog.java
+                    │   ├── Report.java
+                    │   └── Reminder.java
+                    │
+                    ├── repository
+                    │   ├── ClientRepository.java
+                    │   ├── UserRepository.java
+                    │   ├── RoleRepository.java
+                    │   ├── MedicationRepository.java
+                    │   ├── ClientMedicationRepository.java
+                    │   ├── MedicationLogRepository.java
+                    │   ├── MedicationInteractionRepository.java
+                    │   ├── AdherenceLogRepository.java
+                    │   ├── ReportRepository.java
+                    │   └── ReminderRepository.java
+                    │
+                    ├── service
+                    │   ├── ClientService.java
+                    │   ├── UserService.java
+                    │   ├── MedicationService.java
+                    │   ├── ClientMedicationService.java
+                    │   ├── MedicationLogService.java
+                    │   ├── MedicationInteractionService.java
+                    │   ├── AdherenceLogService.java
+                    │   ├── ReportService.java
+                    │   └── ReminderService.java
+                    │
+                    └── MediTimeApplication.java

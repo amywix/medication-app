@@ -1,3 +1,4 @@
+//Amy Wickham 121785021
 package com.example.meditime.model;
 
 import jakarta.persistence.*;
@@ -9,8 +10,14 @@ public class MedicationInteraction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long interactionId;
 
-    private String medicationId_1;
-    private String medicationId_2;
+   @ManyToOne
+@JoinColumn(name = "medication_id_1")
+private Medication medication1;
+
+@ManyToOne
+@JoinColumn(name = "medication_id_2")
+private Medication medication2;
+
     private String interactionDescription;
 
     @Enumerated(EnumType.STRING)
@@ -30,21 +37,23 @@ public class MedicationInteraction {
         this.interactionId = interactionId;
     }
 
-    public String getMedicationId_1() {
-        return medicationId_1;
+    public Medication getMedication1() {
+        return medication1;
     }
 
-    public void setMedicationId_1(String medicationId_1) {
-        this.medicationId_1 = medicationId_1;
+    public void setMedication1(Medication medication1) {
+        this.medication1 = medication1;
     }
 
-    public String getMedicationId_2() {
-        return medicationId_2;
+    public Medication getMedication2() {
+        return medication2;
     }
 
-    public void setMedicationId_2(String medicationId_2) {
-        this.medicationId_2 = medicationId_2;
+    public void setMedication2(Medication medication2) {
+        this.medication2 = medication2;
     }
+
+    
 
     public String getInteractionDescription() {
         return interactionDescription;
