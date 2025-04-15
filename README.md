@@ -24,8 +24,7 @@ Carer Role
 	Mark Medication as Given or Skipped
 	Upload Incident Note
 
-Working databse functions. 
-
+Working databse connection
 
 src
 └── main
