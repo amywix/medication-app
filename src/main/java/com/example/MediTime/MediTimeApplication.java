@@ -7,6 +7,8 @@ package com.example.meditime;
 import com.example.meditime.dto.ClientDTO;
 import com.example.meditime.dto.ClientMedicationDTO;
 import com.example.meditime.model.Client;
+import com.example.meditime.model.Role;
+import com.example.meditime.repository.RoleRepository;
 import com.example.meditime.service.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -30,7 +32,8 @@ public class MediTimeApplication {
         MedicationInteractionService medicationInteractionService = context.getBean(MedicationInteractionService.class);
         MedicationService medicationService = context.getBean(MedicationService.class);
         MedicationLogService medicationLogService = context.getBean(MedicationLogService.class);
-
+RoleRepository roleRepository = context.getBean(RoleRepository.class);
+  initializeRoles(roleRepository);
         Scanner scanner = new Scanner(System.in);
 
         // Main menu
@@ -62,6 +65,19 @@ public class MediTimeApplication {
                 }
                 default -> System.out.println("Invalid choice. Try again.");
             }
+        }
+    }
+    private static void initializeRoles(RoleRepository roleRepository) {
+        createRoleIfNotExists(roleRepository, "Manager");
+        createRoleIfNotExists(roleRepository, "Carer");
+    }
+
+    private static void createRoleIfNotExists(RoleRepository roleRepository, String roleName) {
+        if (roleRepository.findByRoleName(roleName).isEmpty()) {
+            Role role = new Role();
+            role.setRoleName(roleName);
+            roleRepository.save(role);
+            System.out.println("Created role: " + roleName);
         }
     }
 
@@ -140,8 +156,9 @@ public class MediTimeApplication {
                     userService.addUser(name, email, password, "Carer");
                     System.out.println("Carer added.");
                 }
-                case 6 -> userService.getUsersByRole("Carer")
-                        .forEach(c -> System.out.println("ID: " + c.getUserId() + " | Name: " + c.getName()));
+               case 6 -> userService.getUsersByRole("Carer")
+    .forEach(c -> System.out.println("ID: " + c.getUserId() + " | Name: " + c.getName()));
+
                 case 7 -> {
                     System.out.print("Enter carer ID to delete: ");
                     Long id = scanner.nextLong(); scanner.nextLine();

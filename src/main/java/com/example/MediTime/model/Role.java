@@ -8,7 +8,8 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roleId;
-
+    
+@Column(unique = true)
     private String roleName;
 
     // Getters and Setters

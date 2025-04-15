@@ -1,5 +1,5 @@
 //Amy Wickham 121785021
-package com.example.MediTime.repository;
+package com.example.meditime.repository;
 
 import com.example.meditime.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
