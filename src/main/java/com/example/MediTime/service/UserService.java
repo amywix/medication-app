@@ -53,4 +53,10 @@ public class UserService {
         }
         return false;
     }
+    
+    // Check if email already exists
+public boolean emailExists(String email) {
+    return userRepository.findByEmail(email).isPresent();
+}
+
 }

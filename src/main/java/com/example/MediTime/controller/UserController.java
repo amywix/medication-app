@@ -1,25 +1,37 @@
-//Amy Wickham 121785021
-// Amy Wickham 12178502
-// File: UserController.java
-// Description: See MediTime documentation. This file is part of the medication management system.
-
 package com.example.meditime.controller;
 
 import com.example.meditime.model.User;
 import com.example.meditime.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
-@RestController
-@RequestMapping("/api/users")
+@Controller
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    @GetMapping("/signup")
+    public String showSignupForm(Model model) {
+        model.addAttribute("user", new User());
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String processSignup(@ModelAttribute("user") User user, Model model) {
+        if (userService.emailExists(user.getEmail())) {
+            model.addAttribute("error", "Email already exists.");
+            return "signup";
+        }
+
+        userService.addUser(user.getName(), user.getEmail(), user.getPassword(), "Carer");
+        return "redirect:/download";
+    }
+
+    @GetMapping("/download")
+    public String showDownloadPage() {
+        return "download";
     }
 }
